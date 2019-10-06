@@ -11,6 +11,5 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         chartview_main.values = mapOf("A" to 10, "B" to 15, "C" to 12)
-        chartview_main.chartMargins = 5
     }
 }
