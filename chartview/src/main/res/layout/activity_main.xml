@@ -8,10 +8,11 @@
 
     <com.github.jaskelai.chartcustomview.ChartView
         android:id="@+id/chartview_main"
+        android:background="@color/colorAccent"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        app:chartMargins="12dp" />
+        app:chartMargins="24dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

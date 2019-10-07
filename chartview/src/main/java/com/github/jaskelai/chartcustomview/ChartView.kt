@@ -15,7 +15,8 @@ class ChartView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val DEFAULT_MARGIN = 64F
+        private const val MIN_HEIGHT = 300
+        private const val MIN_WIDTH_BY_COLUMN = 72
         private const val STROKE_WIDTH = 4F
         private const val TEXT_SIZE = 48F
     }
@@ -24,7 +25,17 @@ class ChartView @JvmOverloads constructor(
         set(value) {
             field = value
             maxValue = values.maxBy { it.value }?.value ?: 0
+
+            rectTextList.clear()
+            rectTextList.addAll(values.keys.map {
+                val rect = Rect()
+                paint.getTextBounds(it, 0, it.length, rect)
+                return@map rect
+            })
             calculateTextSizes()
+
+            invalidate()
+            requestLayout()
         }
 
     var chartMargins: Int = 0
@@ -35,6 +46,7 @@ class ChartView @JvmOverloads constructor(
         }
 
     private var maxValue = 0
+    private var rectTextList = mutableListOf<Rect>()
     private lateinit var paint: Paint
     private lateinit var rectMaxValue: Rect
     private lateinit var rectMinValue: Rect
@@ -62,9 +74,9 @@ class ChartView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val needWidth =
-            rectMaxValue.width() + values.size * 72 + chartMargins * (values.size - 1) + paddingStart + paddingEnd + suggestedMinimumWidth
-        val needHeight = 300 + paddingBottom + paddingTop + suggestedMinimumHeight
+        val needWidth = rectMaxValue.width() + values.size * MIN_WIDTH_BY_COLUMN +
+                chartMargins * (values.size - 1) + paddingStart + paddingEnd + suggestedMinimumWidth
+        val needHeight = MIN_HEIGHT + paddingBottom + paddingTop + suggestedMinimumHeight
 
         val measuredWidth = calculateSize(needWidth, widthMeasureSpec)
         val measuredHeight = calculateSize(needHeight, heightMeasureSpec)
@@ -76,11 +88,12 @@ class ChartView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         if (values.isNotEmpty()) {
-            val lineX = (rectMaxValue.width() * 0.5 - STROKE_WIDTH / 2).toFloat()
+            val lineX = (rectMaxValue.width() * 0.5 + STROKE_WIDTH).toFloat()
+            val lineY = (rectMaxValue.height() * 2).toFloat()
 
             canvas?.drawText(
                 maxValue.toString(),
-                lineX - rectMaxValue.width() / 2 - STROKE_WIDTH ,
+                lineX - rectMaxValue.width() / 2 - STROKE_WIDTH,
                 (rectMaxValue.height() * 1.5).toFloat(),
                 paint
             )
@@ -91,11 +104,9 @@ class ChartView @JvmOverloads constructor(
                 paint
             )
 
-            val lineY = (rectMaxValue.height() * 2).toFloat()
-
             val ratio = (height - lineY * 2) / maxValue
             val valueWidth =
-                (width - DEFAULT_MARGIN * 1.5 - (values.size - 1) * chartMargins) / values.size
+                (width - rectMaxValue.width() - (values.size - 1) * chartMargins) / values.size - STROKE_WIDTH
 
             canvas?.drawLine(
                 lineX,
@@ -109,19 +120,19 @@ class ChartView @JvmOverloads constructor(
             var margin = 0
 
             for (entry in values) {
-                val startX = DEFAULT_MARGIN + margin * counter + valueWidth * counter
+                val startX = rectMaxValue.width() + margin * counter + valueWidth * counter
 
                 canvas?.drawRect(
-                    startX.toFloat(),
+                    startX,
                     height - entry.value * ratio - lineY,
-                    (startX + valueWidth).toFloat(),
+                    startX + valueWidth,
                     height - lineY,
                     paint
                 )
 
                 canvas?.drawText(
                     entry.key,
-                    (startX + valueWidth / 2).toFloat(),
+                    startX + valueWidth / 2,
                     (height - rectMinValue.height() / 2).toFloat(),
                     paint
                 )
