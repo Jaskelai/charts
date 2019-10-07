@@ -89,33 +89,13 @@ class ChartView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         if (values.isNotEmpty()) {
-            val lineStartX = (rectMaxValue.width() * 0.5 + STROKE_WIDTH).toFloat()
-            val lineTopY = (rectMaxValue.height() * 2).toFloat()
+            val axisX = (rectMaxValue.width() * 0.5 + STROKE_WIDTH).toFloat()
+            val axisTopY = (rectMaxValue.height() * 2).toFloat()
+            val ratio = (height - axisTopY * 2) / maxValue
+            val valueWidth = (width - rectMaxValue.width() -
+                    (values.size - 1) * chartMargins) / values.size - STROKE_WIDTH
 
-            canvas?.drawText(
-                maxValue.toString(),
-                lineStartX - rectMaxValue.width() / 2 - STROKE_WIDTH,
-                (rectMaxValue.height() * 1.5).toFloat(),
-                paint
-            )
-            canvas?.drawText(
-                "0",
-                lineStartX - rectMinValue.width() / 2 - STROKE_WIDTH,
-                (height - rectMinValue.height() / 2).toFloat(),
-                paint
-            )
-
-            val ratio = (height - lineTopY * 2) / maxValue
-            val valueWidth =
-                (width - rectMaxValue.width() - (values.size - 1) * chartMargins) / values.size - STROKE_WIDTH
-
-            canvas?.drawLine(
-                lineStartX,
-                lineTopY,
-                lineStartX,
-                height - lineTopY,
-                paint
-            )
+            drawAxis(canvas, axisX, axisTopY)
 
             var counter = 0
             var margin = 0
@@ -124,25 +104,26 @@ class ChartView @JvmOverloads constructor(
                 val startX = rectMaxValue.width() + margin * counter + valueWidth * counter
 
                 val top = if (entry.value > 0) {
-                    height - entry.value * ratio - lineTopY
+                    height - entry.value * ratio - axisTopY
                 } else {
-                    height - lineTopY - STROKE_WIDTH / 2
+                    height - axisTopY - STROKE_WIDTH / 2
                 }
 
                 canvas?.drawRect(
                     startX,
                     top,
                     startX + valueWidth,
-                    height - lineTopY,
+                    height - axisTopY,
                     paint
                 )
 
                 canvas?.drawText(
                     entry.key,
-                    startX + valueWidth / 2,
+                    startX + valueWidth / 2 - rectTextList[counter].width() / 2,
                     (height - rectMinValue.height() / 2).toFloat(),
                     paint
                 )
+
                 if (counter == 0) {
                     margin = chartMargins
                 }
@@ -173,5 +154,29 @@ class ChartView @JvmOverloads constructor(
         paint.getTextBounds(maxValue.toString(), 0, maxValue.toString().length, rectMaxValue)
 
         paint.getTextBounds("0", 0, 1, rectMinValue)
+    }
+
+    private fun drawAxis(canvas: Canvas?, axisX: Float, axisTopY: Float) {
+        canvas?.drawText(
+            maxValue.toString(),
+            axisX - rectMaxValue.width() / 2 - STROKE_WIDTH,
+            (rectMaxValue.height() * 1.5).toFloat(),
+            paint
+        )
+
+        canvas?.drawText(
+            "0",
+            axisX - rectMinValue.width() / 2 - STROKE_WIDTH,
+            (height - rectMinValue.height() / 2).toFloat(),
+            paint
+        )
+
+        canvas?.drawLine(
+            axisX,
+            axisTopY,
+            axisX,
+            height - axisTopY,
+            paint
+        )
     }
 }

@@ -11,6 +11,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         chartview_main.values =
-            mapOf("A" to 700, "B" to 500, "C" to 120, "D" to 300, "E" to 1000)
+            mapOf("AAA" to 700, "BBB" to 500, "C" to 120, "D" to 300, "E" to 1000)
     }
 }
