@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chartview_main.values = mapOf("A" to 10, "B" to 15, "C" to 12)
+        chartview_main.values =
+            mapOf("A" to 20, "B" to 15, "C" to 12, "D" to 3, "E" to 1000)
     }
 }

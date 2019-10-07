@@ -3,9 +3,8 @@ package com.github.jaskelai.chartcustomview
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.util.AttributeSet
-import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.widget.TintTypedArray
 
@@ -15,25 +14,33 @@ class ChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    companion object {
+        private const val DEFAULT_MARGIN = 64F
+        private const val STROKE_WIDTH = 4F
+        private const val TEXT_SIZE = 48F
+    }
+
     var values: Map<String, Int> = HashMap()
+        set(value) {
+            field = value
+            maxValue = values.maxBy { it.value }?.value ?: 0
+            calculateTextSizes()
+        }
 
     var chartMargins: Int = 0
         set(value) {
-            field = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                value.toFloat(),
-                context.resources.displayMetrics
-            ).toInt()
+            field = value
             invalidate()
             requestLayout()
         }
 
     private var maxValue = 0
-    private val paint = Paint()
+    private lateinit var paint: Paint
+    private lateinit var rectMaxValue: Rect
+    private lateinit var rectMinValue: Rect
 
     init {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 8F
+        setupPaint()
 
         val a = attrs?.let {
             TintTypedArray.obtainStyledAttributes(
@@ -55,8 +62,9 @@ class ChartView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val needWidth = values.size * 60 + paddingStart + paddingEnd + suggestedMinimumWidth
-        val needHeight = 200 + paddingBottom + paddingTop + suggestedMinimumHeight
+        val needWidth =
+            rectMaxValue.width() + values.size * 72 + chartMargins * (values.size - 1) + paddingStart + paddingEnd + suggestedMinimumWidth
+        val needHeight = 300 + paddingBottom + paddingTop + suggestedMinimumHeight
 
         val measuredWidth = calculateSize(needWidth, widthMeasureSpec)
         val measuredHeight = calculateSize(needHeight, heightMeasureSpec)
@@ -68,23 +76,68 @@ class ChartView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         if (values.isNotEmpty()) {
-            maxValue = values.maxBy { it.value }?.value ?: 0
-            var counter = 0
+            val lineX = (rectMaxValue.width() * 0.5 - STROKE_WIDTH / 2).toFloat()
 
-            val ratio = height / maxValue
-            val valueWidth = width / values.size
+            canvas?.drawText(
+                maxValue.toString(),
+                lineX - rectMaxValue.width() / 2 - STROKE_WIDTH ,
+                (rectMaxValue.height() * 1.5).toFloat(),
+                paint
+            )
+            canvas?.drawText(
+                "0",
+                lineX - rectMinValue.width() / 2 - STROKE_WIDTH,
+                (height - rectMinValue.height() / 2).toFloat(),
+                paint
+            )
+
+            val lineY = (rectMaxValue.height() * 2).toFloat()
+
+            val ratio = (height - lineY * 2) / maxValue
+            val valueWidth =
+                (width - DEFAULT_MARGIN * 1.5 - (values.size - 1) * chartMargins) / values.size
+
+            canvas?.drawLine(
+                lineX,
+                lineY,
+                lineX,
+                height - lineY,
+                paint
+            )
+
+            var counter = 0
+            var margin = 0
 
             for (entry in values) {
+                val startX = DEFAULT_MARGIN + margin * counter + valueWidth * counter
+
                 canvas?.drawRect(
-                    x + valueWidth * counter,
-                    (height - entry.value * ratio).toFloat(),
-                    x + valueWidth * counter + valueWidth,
-                    height.toFloat(),
+                    startX.toFloat(),
+                    height - entry.value * ratio - lineY,
+                    (startX + valueWidth).toFloat(),
+                    height - lineY,
                     paint
                 )
+
+                canvas?.drawText(
+                    entry.key,
+                    (startX + valueWidth / 2).toFloat(),
+                    (height - rectMinValue.height() / 2).toFloat(),
+                    paint
+                )
+                if (counter == 0) {
+                    margin = chartMargins
+                }
                 counter++
             }
         }
+    }
+
+    private fun setupPaint() {
+        paint = Paint()
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = STROKE_WIDTH
+        paint.textSize = TEXT_SIZE
     }
 
     private fun calculateSize(contentSize: Int, measureSpec: Int): Int {
@@ -96,5 +149,13 @@ class ChartView @JvmOverloads constructor(
             MeasureSpec.AT_MOST -> if (contentSize < specSize) contentSize else specSize
             else -> contentSize
         }
+    }
+
+    private fun calculateTextSizes() {
+        rectMaxValue = Rect()
+        paint.getTextBounds(maxValue.toString(), 0, maxValue.toString().length, rectMaxValue)
+
+        rectMinValue = Rect()
+        paint.getTextBounds("0", 0, 1, rectMinValue)
     }
 }
