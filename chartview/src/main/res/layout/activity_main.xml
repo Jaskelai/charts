@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.github.jaskelai.customviewexample.ChartView
+    <com.github.jaskelai.chartcustomview.ChartView
         android:id="@+id/chartview_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:chartMargins="12dp"/>
+        android:background="@color/colorAccent"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="16dp"
+        app:chartMargins="24dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
