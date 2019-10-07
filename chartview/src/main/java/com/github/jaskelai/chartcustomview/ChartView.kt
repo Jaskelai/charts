@@ -47,9 +47,10 @@ class ChartView @JvmOverloads constructor(
 
     private var maxValue = 0
     private var rectTextList = mutableListOf<Rect>()
+    private val rectMaxValue = Rect()
+    private val rectMinValue = Rect()
+
     private lateinit var paint: Paint
-    private lateinit var rectMaxValue: Rect
-    private lateinit var rectMinValue: Rect
 
     init {
         setupPaint()
@@ -88,31 +89,31 @@ class ChartView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         if (values.isNotEmpty()) {
-            val lineX = (rectMaxValue.width() * 0.5 + STROKE_WIDTH).toFloat()
-            val lineY = (rectMaxValue.height() * 2).toFloat()
+            val lineStartX = (rectMaxValue.width() * 0.5 + STROKE_WIDTH).toFloat()
+            val lineTopY = (rectMaxValue.height() * 2).toFloat()
 
             canvas?.drawText(
                 maxValue.toString(),
-                lineX - rectMaxValue.width() / 2 - STROKE_WIDTH,
+                lineStartX - rectMaxValue.width() / 2 - STROKE_WIDTH,
                 (rectMaxValue.height() * 1.5).toFloat(),
                 paint
             )
             canvas?.drawText(
                 "0",
-                lineX - rectMinValue.width() / 2 - STROKE_WIDTH,
+                lineStartX - rectMinValue.width() / 2 - STROKE_WIDTH,
                 (height - rectMinValue.height() / 2).toFloat(),
                 paint
             )
 
-            val ratio = (height - lineY * 2) / maxValue
+            val ratio = (height - lineTopY * 2) / maxValue
             val valueWidth =
                 (width - rectMaxValue.width() - (values.size - 1) * chartMargins) / values.size - STROKE_WIDTH
 
             canvas?.drawLine(
-                lineX,
-                lineY,
-                lineX,
-                height - lineY,
+                lineStartX,
+                lineTopY,
+                lineStartX,
+                height - lineTopY,
                 paint
             )
 
@@ -122,11 +123,17 @@ class ChartView @JvmOverloads constructor(
             for (entry in values) {
                 val startX = rectMaxValue.width() + margin * counter + valueWidth * counter
 
+                val top = if (entry.value > 0) {
+                    height - entry.value * ratio - lineTopY
+                } else {
+                    height - lineTopY - STROKE_WIDTH / 2
+                }
+
                 canvas?.drawRect(
                     startX,
-                    height - entry.value * ratio - lineY,
+                    top,
                     startX + valueWidth,
-                    height - lineY,
+                    height - lineTopY,
                     paint
                 )
 
@@ -163,10 +170,8 @@ class ChartView @JvmOverloads constructor(
     }
 
     private fun calculateTextSizes() {
-        rectMaxValue = Rect()
         paint.getTextBounds(maxValue.toString(), 0, maxValue.toString().length, rectMaxValue)
 
-        rectMinValue = Rect()
         paint.getTextBounds("0", 0, 1, rectMinValue)
     }
 }
