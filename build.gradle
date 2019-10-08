@@ -5,7 +5,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'
@@ -23,4 +22,8 @@ allprojects {
         jcenter()
         maven { url 'https://jitpack.io' }
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
