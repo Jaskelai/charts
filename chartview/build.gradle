@@ -9,8 +9,6 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
-group = 'com.github.jaskelai'
-
 android {
     compileSdkVersion 29
     defaultConfig {
