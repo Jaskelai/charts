@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ChartView">
+    <declare-styleable name="ColumnChartView">
         <attr name="chartMargins" format="dimension" />
     </declare-styleable>
 </resources>

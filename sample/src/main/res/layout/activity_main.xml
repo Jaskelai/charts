@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.github.jaskelai.chartcustomview.ChartView
+    <com.github.jaskelai.chartcustomview.ColumnChartView
         android:id="@+id/chartview_main"
         android:layout_width="300dp"
         android:layout_height="300dp"
