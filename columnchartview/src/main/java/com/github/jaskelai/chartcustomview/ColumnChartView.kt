@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.TintTypedArray
 
-class ChartView @JvmOverloads constructor(
+class ColumnChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -59,7 +59,7 @@ class ChartView @JvmOverloads constructor(
             TintTypedArray.obtainStyledAttributes(
                 context,
                 attrs,
-                R.styleable.ChartView,
+                R.styleable.ColumnChartView,
                 defStyleAttr,
                 defStyleAttr
             )
@@ -67,7 +67,7 @@ class ChartView @JvmOverloads constructor(
 
         try {
             a?.let {
-                chartMargins = it.getDimension(R.styleable.ChartView_chartMargins, 0F).toInt()
+                chartMargins = it.getDimension(R.styleable.ColumnChartView_chartMargins, 0F).toInt()
             }
         } finally {
             a?.recycle()
