@@ -12,3 +12,27 @@ dependencies {
     implementation 'com.github.jaskelai:column-chart-view:VERSION'
 }
 ```
+
+# How to use
+Add the view to layout:
+```xml
+<com.github.jaskelai.chartcustomview.ColumnChartView
+        android:id="@+id/chartview_main"
+        android:layout_width="300dp"
+        android:layout_height="300dp"/>
+```
+
+Set values to chart:
+```kotlin
+chartview_main.values = mapOf("AA" to 20, "BB" to 50, "CC" to 105, "DD" to 45)
+```    
+
+# Margins
+You can specify margins between columns:
+```xml
+<com.github.jaskelai.chartcustomview.ColumnChartView
+        android:id="@+id/chartview_main"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:chartMargins="12dp" />
+```
