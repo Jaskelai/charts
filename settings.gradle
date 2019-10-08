@@ -1,2 +1,2 @@
-include ':chartview'
+include ':chartview', ':sample', ':sample'
 rootProject.name='ChartCustomView'
