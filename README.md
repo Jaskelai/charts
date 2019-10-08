@@ -11,6 +11,6 @@ Simple custom column chart view for Android
 Add the dependency in your build.gradle:
 ```groovy
 dependencies {
-    implementation 'com.github.Jaskelai:column-chart-view:VERSION'
+    implementation 'com.github.jaskelai:column-chart-view:VERSION'
 }
 ```
