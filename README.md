@@ -6,7 +6,19 @@ Simple custom column chart view for Android
 <img src="https://github.com/Jaskelai/column-chart-view/blob/master/screenshots/Screenshot_1570705883.png" width="200"> <img src="https://github.com/Jaskelai/column-chart-view/blob/master/screenshots/Screenshot_1570705957.png" width="200"> <img src="https://github.com/Jaskelai/column-chart-view/blob/master/screenshots/Screenshot_1570706009.png" width="200">
 
 # How to add
-Add the dependency in your build.gradle:
+Add it in your root build.gradle at the end of repositories:
+```groovy
+dependencies {
+    allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+}
+```
+
+Add it in your module build.gradle:
 ```groovy
 dependencies {
     implementation 'com.github.jaskelai:column-chart-view:VERSION'
@@ -19,7 +31,7 @@ Add the view to layout:
 <com.github.jaskelai.chartcustomview.ColumnChartView
         android:id="@+id/chartview_main"
         android:layout_width="300dp"
-        android:layout_height="300dp"/>
+        android:layout_height="300dp" />
 ```
 
 Set values to chart:
