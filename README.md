@@ -3,7 +3,7 @@
 
 Simple custom column chart view for Android
 
-<img src="https://github.com/Jaskelai/column-chart-view/blob/master/screenshots/Screenshot_1570545373.png" width="200">
+<img src="https://github.com/Jaskelai/column-chart-view/blob/master/screenshots/Screenshot_1570705883.png" width="200"> <img src="https://github.com/Jaskelai/column-chart-view/blob/master/screenshots/Screenshot_1570705957.png" width="200"> <img src="https://github.com/Jaskelai/column-chart-view/blob/master/screenshots/Screenshot_1570706009.png" width="200">
 
 # How to add
 Add the dependency in your build.gradle:
@@ -24,7 +24,9 @@ Add the view to layout:
 
 Set values to chart:
 ```kotlin
-chartview_main.values = mapOf("AA" to 20, "BB" to 50, "CC" to 105, "DD" to 45)
+val map: Map<String, Int> = mapOf("AA" to 20, "BB" to 30, "CC" to 100)
+val chartDataList: List<ChartData> = map.toChartData()
+chartview_main.values = chartDataList
 ```    
 
 # Margins
