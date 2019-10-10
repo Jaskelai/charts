@@ -2,6 +2,7 @@ package com.github.jaskelai.chartcustomview
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
@@ -21,17 +22,11 @@ class ColumnChartView @JvmOverloads constructor(
         private const val TEXT_SIZE = 48F
     }
 
-    var values: Map<String, Int> = HashMap()
-        set(value) {
-            field = value
-            maxValue = values.maxBy { it.value }?.value ?: 0
+    var values = emptyList<ChartData>()
+        set(values) {
+            field = values
 
-            rectTextList.clear()
-            rectTextList.addAll(values.keys.map {
-                val rect = Rect()
-                paint.getTextBounds(it, 0, it.length, rect)
-                return@map rect
-            })
+            maxValue = values.maxBy { it.value }?.value ?: 0
             calculateTextSizes()
 
             invalidate()
@@ -46,16 +41,17 @@ class ColumnChartView @JvmOverloads constructor(
         }
 
     private var maxValue = 0
-    private var rectTextList = mutableListOf<Rect>()
     private val rectMaxValue = Rect()
     private val rectMinValue = Rect()
 
-    private lateinit var paint: Paint
+    private val paint = Paint()
+    private val textPaint = Paint()
 
     init {
         setupPaint()
+        setupTextPaint()
 
-        val a = attrs?.let {
+        val array = attrs?.let {
             TintTypedArray.obtainStyledAttributes(
                 context,
                 attrs,
@@ -64,13 +60,12 @@ class ColumnChartView @JvmOverloads constructor(
                 defStyleAttr
             )
         }
-
         try {
-            a?.let {
+            array?.let {
                 chartMargins = it.getDimension(R.styleable.ColumnChartView_chartMargins, 0F).toInt()
             }
         } finally {
-            a?.recycle()
+            array?.recycle()
         }
     }
 
@@ -88,55 +83,56 @@ class ColumnChartView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        if (values.isNotEmpty()) {
-            val axisX = (rectMaxValue.width() * 0.5 + STROKE_WIDTH).toFloat()
-            val axisTopY = (rectMaxValue.height() * 2).toFloat()
-            val ratio = (height - axisTopY * 2) / maxValue
-            val valueWidth = (width - rectMaxValue.width() -
-                    (values.size - 1) * chartMargins) / values.size - STROKE_WIDTH
+        if (values.isEmpty()) {
+            return
+        }
 
-            drawAxis(canvas, axisX, axisTopY)
+        val axisX = rectMaxValue.width() * 0.5F + STROKE_WIDTH + paddingStart
+        val axisTopY = rectMaxValue.height() * 2F + paddingTop
+        val axisBottomY = height - paddingBottom - rectMinValue.height() * 2 - STROKE_WIDTH
+        val ratio = (axisBottomY - axisTopY) / maxValue
+        val columnWidth = (width - paddingStart - paddingEnd - rectMaxValue.width() -
+                (values.size - 1) * chartMargins) / values.size - STROKE_WIDTH
 
-            var counter = 0
-            var margin = 0
+        drawAxis(canvas, axisX, axisTopY, axisBottomY)
 
-            for (entry in values) {
-                val startX = rectMaxValue.width() + margin * counter + valueWidth * counter
+        var margin = 0
 
-                val top = if (entry.value > 0) {
-                    height - entry.value * ratio - axisTopY
-                } else {
-                    height - axisTopY - STROKE_WIDTH / 2
-                }
+        for ((counter, entry) in values.withIndex()) {
+            val startX =
+                paddingStart + rectMaxValue.width() + margin * counter + columnWidth * counter
 
-                canvas?.drawRect(
-                    startX,
-                    top,
-                    startX + valueWidth,
-                    height - axisTopY,
-                    paint
-                )
+            val top = if (entry.value > 0) {
+                axisBottomY - entry.value * ratio
+            } else {
+                height - axisTopY - STROKE_WIDTH / 2
+            }
 
-                canvas?.drawText(
-                    entry.key,
-                    startX + valueWidth / 2 - rectTextList[counter].width() / 2,
-                    (height - rectMinValue.height() / 2).toFloat(),
-                    paint
-                )
+            drawColumn(canvas, entry, startX, columnWidth, top, axisBottomY)
 
-                if (counter == 0) {
-                    margin = chartMargins
-                }
-                counter++
+            drawColumnTitle(canvas, entry, startX, columnWidth, axisBottomY)
+
+            if (counter == 0) {
+                margin = chartMargins
             }
         }
     }
 
     private fun setupPaint() {
-        paint = Paint()
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = STROKE_WIDTH
-        paint.textSize = TEXT_SIZE
+        paint.run {
+            style = Paint.Style.STROKE
+            strokeWidth = STROKE_WIDTH
+            textSize = TEXT_SIZE
+        }
+    }
+
+    private fun setupTextPaint() {
+        textPaint.run {
+            style = Paint.Style.STROKE
+            strokeWidth = STROKE_WIDTH
+            textSize = TEXT_SIZE
+            color = Color.BLACK
+        }
     }
 
     private fun calculateSize(contentSize: Int, measureSpec: Int): Int {
@@ -156,27 +152,68 @@ class ColumnChartView @JvmOverloads constructor(
         paint.getTextBounds("0", 0, 1, rectMinValue)
     }
 
-    private fun drawAxis(canvas: Canvas?, axisX: Float, axisTopY: Float) {
+    private fun drawAxis(canvas: Canvas?, axisX: Float, axisTopY: Float, axisBottomY: Float) {
         canvas?.drawText(
             maxValue.toString(),
             axisX - rectMaxValue.width() / 2 - STROKE_WIDTH,
-            (rectMaxValue.height() * 1.5).toFloat(),
-            paint
+            axisTopY - rectMaxValue.height() / 2,
+            textPaint
         )
 
         canvas?.drawText(
             "0",
             axisX - rectMinValue.width() / 2 - STROKE_WIDTH,
-            (height - rectMinValue.height() / 2).toFloat(),
-            paint
+            axisBottomY + rectMinValue.height() * 1.5F + STROKE_WIDTH,
+            textPaint
         )
 
         canvas?.drawLine(
             axisX,
             axisTopY,
             axisX,
-            height - axisTopY,
+            axisBottomY,
+            textPaint
+        )
+    }
+
+    private fun drawColumn(
+        canvas: Canvas?,
+        entry: ChartData,
+        startX: Float,
+        columnWidth: Float,
+        top: Float,
+        bottom: Float
+    ) {
+        paint.color = entry.color
+        if (entry.isFilled) {
+            paint.style = Paint.Style.FILL
+        } else {
+            paint.style = Paint.Style.STROKE
+        }
+
+        canvas?.drawRect(
+            startX,
+            top,
+            startX + columnWidth,
+            bottom,
             paint
         )
+    }
+
+    private fun drawColumnTitle(
+        canvas: Canvas?,
+        chartData: ChartData,
+        startX: Float,
+        columnWidth: Float,
+        axisBottomY: Float
+    ) {
+        chartData.name?.let {
+            canvas?.drawText(
+                it,
+                startX + columnWidth / 2 - textPaint.measureText(it) / 2,
+                axisBottomY + rectMinValue.height() * 1.5F + STROKE_WIDTH,
+                textPaint
+            )
+        }
     }
 }
