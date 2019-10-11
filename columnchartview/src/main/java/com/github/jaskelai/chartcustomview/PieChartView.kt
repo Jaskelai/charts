@@ -1,12 +1,15 @@
 package com.github.jaskelai.chartcustomview
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.TintTypedArray
-import java.util.*
+import java.util.Random
 
 class PieChartView @JvmOverloads constructor(
     context: Context,
