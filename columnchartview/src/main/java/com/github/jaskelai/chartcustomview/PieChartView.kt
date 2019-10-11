@@ -86,7 +86,7 @@ class PieChartView @JvmOverloads constructor(
         val size: Int
         val width = measuredWidth
         val height = measuredHeight
-        val widthWithoutPadding = width - paddingLeft - paddingRight
+        val widthWithoutPadding = width - paddingStart - paddingEnd
         val heightWithoutPadding = height - paddingTop - paddingBottom
 
         size = if (widthWithoutPadding > heightWithoutPadding) {
@@ -96,7 +96,7 @@ class PieChartView @JvmOverloads constructor(
         }
 
         setMeasuredDimension(
-            size + paddingLeft + paddingRight,
+            size + paddingStart + paddingEnd,
             size + paddingTop + paddingBottom
         )
     }
