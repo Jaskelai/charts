@@ -51,7 +51,7 @@ chartview_main.values = chartDataList
 ```    
 
 # Margins
-You can specify margins between columns:
+You can specify margins between columns (0 by default):
 ```xml
 <com.github.jaskelai.chartcustomview.ColumnChartView
         android:id="@+id/chartview_main"
@@ -61,7 +61,7 @@ You can specify margins between columns:
 ```
 
 # Colors
-You can specify colors:
+You can specify colors (cyan and pink by default):
 ```xml
 <com.github.jaskelai.chartcustomview.ColumnChartView
         android:id="@+id/chartview_main"
@@ -72,7 +72,7 @@ You can specify colors:
 ```
 
 # Text size
-You can specify text size:
+You can specify text size (16sp by default):
 ```xml
 <com.github.jaskelai.chartcustomview.ColumnChartView
         android:id="@+id/chartview_main"
@@ -82,7 +82,7 @@ You can specify text size:
 ```
 
 # Filling
-You can specify filling:
+You can specify filling (false by default):
 ```xml
 <com.github.jaskelai.chartcustomview.ColumnChartView
         android:id="@+id/chartview_main"
