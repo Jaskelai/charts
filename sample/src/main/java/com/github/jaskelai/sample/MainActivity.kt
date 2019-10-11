@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
 
         val map: Map<String, Int> = mapOf("AA" to 20, "BB" to 30, "CC" to 100)
         val chartDataList: List<ChartData> = map.toChartData()
-        chartview_main.values = chartDataList
+        chart_column.values = chartDataList
+
+        chart_pie.values = map
     }
 }
