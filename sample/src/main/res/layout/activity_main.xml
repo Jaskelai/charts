@@ -6,14 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.github.jaskelai.chartcustomview.ChartView
+    <com.github.jaskelai.chartcustomview.ColumnChartView
         android:id="@+id/chartview_main"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        app:isFilled="true"
+        app:textSize="28sp"
         app:chartMargins="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 29
 
-
     defaultConfig {
         applicationId "com.github.jaskelai.sample"
         minSdkVersion 21
@@ -34,5 +33,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.github.Jaskelai:column-chart-view:0.1.5'
+    implementation 'com.github.jaskelai:charts:0.3.1'
 }

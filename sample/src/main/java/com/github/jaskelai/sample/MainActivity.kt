@@ -2,6 +2,8 @@ package com.github.jaskelai.sample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.github.jaskelai.chartcustomview.ChartData
+import com.github.jaskelai.chartcustomview.toChartData
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -10,6 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chartview_main.values = mapOf("AA" to 20, "BB" to 50, "CC" to 105, "DD" to 45)
+        val map: Map<String, Int> = mapOf("AA" to 20, "BB" to 30, "CC" to 100)
+        val chartDataList: List<ChartData> = map.toChartData()
+        chartview_main.values = chartDataList
     }
 }
