@@ -1,6 +1,5 @@
 package com.github.jaskelai.sample
 
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.github.jaskelai.chartcustomview.ChartData
@@ -14,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val map: Map<String, Int> = mapOf("AA" to 20, "BB" to 30, "CC" to 100)
-        val chartDataList: List<ChartData> = map.toChartData(Color.CYAN, true)
+        val chartDataList: List<ChartData> = map.toChartData()
         chartview_main.values = chartDataList
     }
 }

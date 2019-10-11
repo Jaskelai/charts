@@ -10,6 +10,8 @@
         android:id="@+id/chartview_main"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        app:isFilled="true"
+        app:textSize="28sp"
         app:chartMargins="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
