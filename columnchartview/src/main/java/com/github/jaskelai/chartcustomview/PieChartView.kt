@@ -2,8 +2,8 @@ package com.github.jaskelai.chartcustomview
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.TintTypedArray
 import java.util.*
@@ -14,7 +14,7 @@ class PieChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private var segments: List<Segment> = listOf()
+    private var segments: List<SegmentData> = listOf()
 
     var values: Map<String, Int> = hashMapOf()
         set(value) {
@@ -22,7 +22,7 @@ class PieChartView @JvmOverloads constructor(
 
             val valuesSum = value.map { it.value }.sum()
             segments = value.map {
-                Segment(
+                SegmentData(
                     it.key,
                     it.value.getPercentOf(valuesSum),
                     generateColor()
@@ -133,6 +133,7 @@ class PieChartView @JvmOverloads constructor(
             start += sweep
         }
         paint.style = Paint.Style.FILL
+        paint.color = (background as? ColorDrawable)?.color ?: Color.WHITE
         canvas?.drawCircle(oval.centerX(), oval.centerY(), radius / 2, paint)
     }
 
