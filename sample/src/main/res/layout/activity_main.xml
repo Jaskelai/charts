@@ -39,7 +39,7 @@
             android:textAlignment="center"
             android:textSize="20sp" />
 
-        <com.github.jaskelai.chartcustomview.PieChartView
+        <com.github.jaskelai.piechartview.PieChartView
             android:id="@+id/chart_pie"
             android:layout_width="300dp"
             android:layout_height="300dp"

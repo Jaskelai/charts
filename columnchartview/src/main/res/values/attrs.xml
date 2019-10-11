@@ -7,9 +7,4 @@
         <attr name="colorBottom" format="color" />
         <attr name="isFilled" format="boolean" />
     </declare-styleable>
-
-    <declare-styleable name="PieChartView">
-        <attr name="pieMargins" format="dimension" />
-        <attr name="radius" format="dimension" />
-    </declare-styleable>
 </resources>

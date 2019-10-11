@@ -1,4 +1,4 @@
-package com.github.jaskelai.chartcustomview
+package com.github.jaskelai.piechartview
 
 import android.content.Context
 import android.graphics.Canvas

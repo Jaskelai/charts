@@ -1,2 +1,2 @@
-include ':columnchartview', ':sample', ':sample'
+include ':columnchartview', ':sample', ':piechartview'
 rootProject.name='ChartCustomView'
