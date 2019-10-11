@@ -3,7 +3,7 @@
 
 Simple custom chart views for Android
 
-<img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570817065.png" width="200"> <img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570817477.png" width="200"> <img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570817652.png" width="200"> <img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570817652.png" width="200"> <img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570827569.png" width="200">
+<img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570817065.png" width="200"> <img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570817477.png" width="200"> <img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570817652.png" width="200"> <img src="https://github.com/Jaskelai/charts/blob/master/screenshots/Screenshot_1570827569.png" width="200">
 
 # How to add
 Add it in your root build.gradle at the end of repositories:
